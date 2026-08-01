@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TABUNGANKU</title>
+    <title>TABUNGANKU - Kas PRO v2</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -153,7 +153,7 @@
                 </div>
             </div>
 
-            <!-- 2. CONTROL PANEL -->
+            <!-- 2. CONTROL PANEL (DENGAN TOMBOL GALERI FOTO) -->
             <div class="bg-slate-900 p-6 rounded-2xl shadow-lg border border-slate-800 flex flex-col md:flex-row gap-4 justify-between items-stretch md:items-center">
                 <div class="flex flex-wrap gap-2">
                     <button onclick="exportToExcel()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-sm py-2.5 px-4 rounded-xl transition flex items-center gap-2 shadow-md shadow-emerald-900/20">
@@ -172,6 +172,11 @@
                         <i class="fa-solid fa-upload"></i> Import Excel
                         <input type="file" id="import-excel-file" accept=".xlsx, .xls" class="hidden" onchange="importFromExcel(event)">
                     </label>
+
+                    <!-- TOMBOL GALERI FOTO (DITAMBAHKAN DI KOTAK MERAH) -->
+                    <button onclick="openGalleryModal()" class="bg-cyan-600 hover:bg-cyan-500 text-white font-semibold text-sm py-2.5 px-4 rounded-xl transition flex items-center gap-2 shadow-md shadow-cyan-900/20">
+                        <i class="fa-solid fa-images"></i> Galeri Foto
+                    </button>
                 </div>
 
                 <button onclick="openTxModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 px-6 rounded-xl transition duration-200 flex items-center justify-center gap-2 shadow-lg shadow-indigo-600/30">
@@ -425,270 +430,815 @@
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
                         <div>
-                            <label class="block text-xs font-semibold text-[#8b9bb4] mb-1">Nama Bank / Platform</label>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">Nama Bank / Platform</label>
                             <input type="text" id="bank-name" required placeholder="Contoh: BCA / Mandiri / QRIS" class="w-full px-3 py-2 text-sm bg-slate-800 border border-slate-700 text-slate-200 placeholder-slate-500 rounded-lg focus:ring-2 focus:ring-amber-500 outline-none">
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-[#8b9bb4] mb-1">Nomor Rekening / Akun</label>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">Nomor Rekening / Akun</label>
                             <input type="text" id="bank-account" required placeholder="1234567890" class="w-full px-3 py-2 text-sm bg-slate-800 border border-slate-700 text-slate-200 placeholder-slate-500 rounded-lg focus:ring-2 focus:ring-amber-500 outline-none">
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-[#8b9bb4] mb-1">Atas Nama (A/N)</label>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">Atas Nama (A/N)</label>
                             <input type="text" id="bank-holder" required placeholder="PT. Contoh Sejahtera" class="w-full px-3 py-2 text-sm bg-slate-800 border border-slate-700 text-slate-200 placeholder-slate-500 rounded-lg focus:ring-2 focus:ring-amber-500 outline-none">
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-[#8b9bb4] mb-1">Username / User ID</label>
-                            <input type="text" id="bank-user" required placeholder="user_mbanking" class="w-full px-3 py-2 text-sm bg-slate-800 border border-slate-700 text-slate-200 placeholder-slate-500 rounded-lg focus:ring-2 focus:ring-amber-500 outline-none">
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">Username / User ID</label>
+                            <input type="text" id="bank-username" placeholder="user_bank123" class="w-full px-3 py-2 text-sm bg-slate-800 border border-slate-700 text-slate-200 placeholder-slate-500 rounded-lg focus:ring-2 focus:ring-amber-500 outline-none">
                         </div>
                     </div>
-                    
-                    <div class="mb-4">
-                        <label class="block text-xs font-semibold text-[#8b9bb4] mb-1">Password / PIN / Kata Sandi Login</label>
-                        <input type="password" id="bank-pass" required placeholder="••••••••" class="w-full px-3 py-2 text-sm bg-slate-800 border border-slate-700 text-slate-200 placeholder-slate-500 rounded-lg focus:ring-2 focus:ring-amber-500 outline-none">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">Password / PIN Mobile Bank</label>
+                            <input type="password" id="bank-password" placeholder="••••••••" class="w-full px-3 py-2 text-sm bg-slate-800 border border-slate-700 text-slate-200 placeholder-slate-500 rounded-lg focus:ring-2 focus:ring-amber-500 outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">Catatan Tambahan</label>
+                            <input type="text" id="bank-notes" placeholder="Token ada di laci / PIN SMS" class="w-full px-3 py-2 text-sm bg-slate-800 border border-slate-700 text-slate-200 placeholder-slate-500 rounded-lg focus:ring-2 focus:ring-amber-500 outline-none">
+                        </div>
                     </div>
 
                     <div class="flex justify-end gap-2">
-                        <button type="button" onclick="resetBankForm()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-xs font-semibold text-slate-300 transition">Reset Form</button>
-                        <button type="submit" class="px-4 py-1.5 bg-amber-600 hover:bg-amber-500 rounded-lg text-xs font-semibold text-white transition shadow-md shadow-amber-900/20">Simpan Data Bank</button>
+                        <button type="button" onclick="resetBankForm()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs font-semibold rounded-lg text-slate-300 transition">Reset</button>
+                        <button type="submit" class="px-4 py-1.5 bg-amber-600 hover:bg-amber-500 text-xs font-semibold rounded-lg text-white transition shadow-md">Simpan Data Bank</button>
                     </div>
                 </form>
 
                 <div>
-                    <h4 class="font-bold text-slate-200 text-sm mb-3">Daftar Akun Bank Tersimpan</h4>
-                    <div class="border border-slate-800 rounded-xl overflow-x-auto">
-                        <table class="w-full text-left text-xs border-collapse">
+                    <h4 class="font-bold text-slate-200 text-sm mb-3"><i class="fa-solid fa-list-ul"></i> Daftar Akses Perbankan</h4>
+                    <div class="overflow-x-auto border border-slate-800 rounded-xl">
+                        <table class="w-full text-left border-collapse text-xs">
                             <thead>
-                                <tr class="bg-slate-950 text-slate-400 border-b border-slate-800 font-semibold uppercase">
-                                    <th class="py-2.5 px-3">Bank</th>
-                                    <th class="py-2.5 px-3">No. Rekening</th>
-                                    <th class="py-2.5 px-3">Atas Nama</th>
-                                    <th class="py-2.5 px-3">User ID</th>
-                                    <th class="py-2.5 px-3">Password / PIN</th>
-                                    <th class="py-2.5 px-3 text-center">Aksi</th>
+                                <tr class="bg-slate-950/80 border-b border-slate-800 text-slate-400 font-semibold uppercase">
+                                    <th class="p-3">Bank / Platform</th>
+                                    <th class="p-3">No. Rekening</th>
+                                    <th class="p-3">Atas Nama</th>
+                                    <th class="p-3">User ID</th>
+                                    <th class="p-3">Password / PIN</th>
+                                    <th class="p-3">Catatan</th>
+                                    <th class="p-3 text-center">Aksi</th>
                                 </tr>
                             </thead>
-                            <tbody id="bank-table-body">
-                                <!-- Inject via JS -->
+                            <tbody id="bank-table-body" class="divide-y divide-slate-800/60">
+                                <!-- JS Inject -->
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
-            <div class="px-6 py-3 bg-slate-950 border-t border-slate-800 text-right flex-shrink-0">
-                <button type="button" onclick="closeBankModal()" class="px-5 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-xl text-xs font-semibold text-slate-300 transition">Tutup Modal</button>
+        </div>
+    </div>
+
+    <!-- MODAL 4: GALERI FOTO / NOTA DOKUMEN -->
+    <div id="gallery-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl w-full max-w-4xl overflow-hidden transform transition-all max-h-[90vh] flex flex-col">
+            <div class="px-6 py-4 bg-cyan-600 text-white flex justify-between items-center flex-shrink-0">
+                <h3 class="font-bold text-lg flex items-center gap-2">
+                    <i class="fa-solid fa-images"></i> Galeri Foto & Dokumentasi Nota
+                </h3>
+                <button onclick="closeGalleryModal()" class="text-white hover:text-slate-200 text-xl font-bold">&times;</button>
+            </div>
+            
+            <div class="p-6 overflow-y-auto space-y-6">
+                <!-- Form Upload Foto -->
+                <form id="gallery-form" onsubmit="handleSavePhoto(event)" class="bg-cyan-950/20 p-4 rounded-xl border border-cyan-800/40">
+                    <h4 class="font-bold text-cyan-400 text-sm mb-3 flex items-center gap-1.5">
+                        <i class="fa-solid fa-upload"></i> Unggah Foto Bukti / Nota Transaksi
+                    </h4>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">Judul / Keterangan Foto</label>
+                            <input type="text" id="photo-title" required placeholder="Contoh: Nota Pembelian ATK Kantor" class="w-full px-3 py-2 text-sm bg-slate-800 border border-slate-700 text-slate-200 placeholder-slate-500 rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">Pilih File Gambar</label>
+                            <input type="file" id="photo-file" accept="image/*" required class="w-full px-3 py-1.5 text-xs bg-slate-800 border border-slate-700 text-slate-300 rounded-lg focus:ring-2 focus:ring-cyan-500 file:mr-3 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:bg-cyan-600 file:text-white hover:file:bg-cyan-500 cursor-pointer">
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end">
+                        <button type="submit" class="px-4 py-2 bg-cyan-600 hover:bg-cyan-500 text-xs font-semibold rounded-lg text-white transition shadow-md">
+                            <i class="fa-solid fa-plus mr-1"></i> Simpan ke Galeri
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Grid Tampilan Foto -->
+                <div>
+                    <h4 class="font-bold text-slate-200 text-sm mb-3"><i class="fa-solid fa-photo-film"></i> Koleksi Foto Tersimpan</h4>
+                    <div id="gallery-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                        <!-- JS Inject Grid Gallery -->
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- JAVASCRIPT LOGIC -->
-    <script>
-        // Set Chart.js Default Dark Theme Colors
-        Chart.defaults.color = '#94a3b8';
-        Chart.defaults.borderColor = '#1e293b';
+    <!-- MODAL 5: PREVIEW FOTO JUMBO -->
+    <div id="photo-preview-modal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex items-center justify-center hidden p-4" onclick="closePhotoPreview()">
+        <div class="max-w-3xl max-h-[90vh] relative p-2" onclick="event.stopPropagation()">
+            <button onclick="closePhotoPreview()" class="absolute -top-10 right-0 text-white hover:text-slate-300 text-2xl font-bold">&times; Tutup</button>
+            <img id="preview-img-target" src="" alt="Preview" class="rounded-xl shadow-2xl max-h-[80vh] w-auto object-contain mx-auto border border-slate-700">
+            <p id="preview-img-title" class="text-center text-slate-200 text-sm font-semibold mt-3 bg-slate-900/80 py-2 px-4 rounded-lg border border-slate-800"></p>
+        </div>
+    </div>
 
+    <!-- JAVASCRIPT & LOGIK APLIKASI -->
+    <script>
         // ==========================================
-        // 1. FIREBASE CONFIGURATION & INITIALIZATION
+        // 1. STATE & KONFIGURASI LOKAL / FIREBASE
         // ==========================================
-        const firebaseConfig = {
-            apiKey: "PASTE_API_KEY_ASLI_ANDA", // Ganti dengan apiKey dari Firebase Anda
-            authDomain: "kasd-424cd.firebaseapp.com",
-            databaseURL: "https://kasd-424cd-default-rtdb.firebaseio.com",
-            projectId: "kasd-424cd",
-            storageBucket: "kasd-424cd.appspot.com",
-            messagingSenderId: "1234567890", // Ganti dengan Sender ID asli jika ada
-            appId: "1:1234567890:web:abcdef" // Ganti dengan appId asli dari Firebase
+        let currentUser = null; // { role: 'admin' | 'operator', name: string }
+        let transactions = JSON.parse(localStorage.getItem('kas_transactions')) || [];
+        let bankAccounts = JSON.parse(localStorage.getItem('kas_banks')) || [];
+        let chatMessages = JSON.parse(localStorage.getItem('kas_chats')) || [];
+        let photos = JSON.parse(localStorage.getItem('kas_photos')) || [];
+        let userPasswords = JSON.parse(localStorage.getItem('kas_passwords')) || {
+            admin: '200329',
+            operator: 'operator123'
         };
 
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
-
-        // Default Passwords
-        if (!localStorage.getItem('kas_pw_admin')) localStorage.setItem('kas_pw_admin', '1995');
-        if (!localStorage.getItem('kas_pw_operator')) localStorage.setItem('kas_pw_operator', 'operator123');
-
-        let transactions = [];
-        let bankAccounts = [];
-        let chatMessages = [];
-        let currentUserRole = null;
-        let isEditing = false;
-        let isEditingBank = false;
         let trendChartInstance = null;
         let categoryChartInstance = null;
+        let isChatOpen = false;
 
-        // AUTHENTICATION & SECURITY
-        function handleLogin(e) {
-            e.preventDefault();
-            const selectedRole = document.getElementById('login-role').value;
-            const enteredPw = document.getElementById('login-password').value;
-            const targetPw = localStorage.getItem(`kas_pw_${selectedRole}`);
+        // ==========================================
+        // 2. INISIALISASI APLIKASI
+        // ==========================================
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set tanggal default untuk form input
+            const todayStr = new Date().toISOString().split('T')[0];
+            document.getElementById('tx-date').value = todayStr;
 
-            if (enteredPw === targetPw) {
-                document.getElementById('login-error').classList.add('hidden');
-                document.getElementById('login-password').value = '';
-                currentUserRole = selectedRole;
-                showDashboard();
+            // Inisialisasi tampilan awal
+            checkAuthSession();
+        });
+
+        function checkAuthSession() {
+            const savedUser = sessionStorage.getItem('kas_active_user');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                showMainScreen();
             } else {
-                document.getElementById('login-error').classList.remove('hidden');
+                showLoginScreen();
             }
         }
 
-        function showDashboard() {
-            document.getElementById('login-screen').classList.add('hidden');
-            document.getElementById('main-screen').classList.remove('hidden');
-            
-            document.getElementById('user-display-name').textContent = currentUserRole === 'admin' ? 'Administrator' : 'Staff Operator';
-            document.getElementById('user-display-role').textContent = currentUserRole === 'admin' ? 'Akses Penuh' : 'Terbatas (Operator)';
+        // ==========================================
+        // 3. MANAJEMEN AUTENTIKASI (LOGIN / LOGOUT)
+        // ==========================================
+        function handleLogin(e) {
+            e.preventDefault();
+            const role = document.getElementById('login-role').value;
+            const passwordInput = document.getElementById('login-password').value;
+            const errorMsg = document.getElementById('login-error');
 
-            const adminControls = document.querySelectorAll('.admin-only');
-            adminControls.forEach(control => {
-                if (currentUserRole === 'admin') {
-                    control.classList.remove('hidden');
-                } else {
-                    control.classList.add('hidden');
-                }
-            });
-
-            document.getElementById('chat-widget').classList.remove('hidden');
-            
-            // Listeners Firebase Realtime Data
-            initFirebaseListeners();
+            if (userPasswords[role] && userPasswords[role] === passwordInput) {
+                currentUser = {
+                    role: role,
+                    name: role === 'admin' ? 'Administrator' : 'Operator Tim'
+                };
+                sessionStorage.setItem('kas_active_user', JSON.stringify(currentUser));
+                errorMsg.classList.add('hidden');
+                document.getElementById('login-password').value = '';
+                showMainScreen();
+            } else {
+                errorMsg.classList.remove('hidden');
+            }
         }
 
         function handleLogout() {
-            currentUserRole = null;
-            document.getElementById('main-screen').classList.add('hidden');
+            sessionStorage.removeItem('kas_active_user');
+            currentUser = null;
+            showLoginScreen();
+        }
+
+        function showLoginScreen() {
             document.getElementById('login-screen').classList.remove('hidden');
+            document.getElementById('main-screen').classList.add('hidden');
             document.getElementById('chat-widget').classList.add('hidden');
         }
 
-        // ==========================================
-        // FIREBASE REALTIME LISTENERS
-        // ==========================================
-        function initFirebaseListeners() {
-            // 1. Sync Transaksi Kas
-            db.ref('transactions').on('value', (snapshot) => {
-                const data = snapshot.val();
-                if (data) {
-                    transactions = Object.keys(data).map(key => ({ id: key, ...data[key] }));
-                } else {
-                    transactions = [];
-                }
-                renderApp();
-            });
+        function showMainScreen() {
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('main-screen').classList.remove('hidden');
+            document.getElementById('chat-widget').classList.remove('hidden');
 
-            // 2. Sync Data Login Bank
-            db.ref('bankAccounts').on('value', (snapshot) => {
-                const data = snapshot.val();
-                if (data) {
-                    bankAccounts = Object.keys(data).map(key => ({ id: key, ...data[key] }));
+            // Render informasi profil pengguna
+            document.getElementById('user-display-name').innerText = currentUser.name;
+            document.getElementById('user-display-role').innerText = currentUser.role === 'admin' ? 'Administrator' : 'Operator';
+
+            // Filter elemen khusus admin
+            const adminElements = document.querySelectorAll('.admin-only');
+            adminElements.forEach(el => {
+                if (currentUser.role === 'admin') {
+                    el.classList.remove('hidden');
                 } else {
-                    bankAccounts = [];
-                }
-                if (document.getElementById('bank-modal') && !document.getElementById('bank-modal').classList.contains('hidden')) {
-                    renderBankTable();
+                    el.classList.add('hidden');
                 }
             });
 
-            // 3. Sync Realtime Chat
-            db.ref('chat_messages').limitToLast(50).on('value', (snapshot) => {
-                const data = snapshot.val();
-                if (data) {
-                    chatMessages = Object.keys(data).map(key => ({ id: key, ...data[key] }));
-                } else {
-                    chatMessages = [];
-                }
-                loadChatMessages();
-            });
+            renderApp();
+            renderChatMessages();
         }
 
-        function formatRupiah(num) {
-            return "Rp " + Number(num).toLocaleString('id-ID');
+        function handleChangePassword(e) {
+            e.preventDefault();
+            const targetRole = document.getElementById('pw-user-target').value;
+            const newPassword = document.getElementById('new-password').value;
+
+            if (newPassword.length < 4) {
+                alert('Password minimal 4 karakter!');
+                return;
+            }
+
+            userPasswords[targetRole] = newPassword;
+            localStorage.setItem('kas_passwords', JSON.stringify(userPasswords));
+            alert(`Password untuk ${targetRole} berhasil diperbarui!`);
+            closePasswordModal();
         }
 
+        // ==========================================
+        // 4. RENDERING & PERHITUNGAN DASHBOARD
+        // ==========================================
         function renderApp() {
-            const searchValue = document.getElementById('search-input').value.toLowerCase();
+            const filteredData = getFilteredTransactions();
+            renderTable(filteredData);
+            updateSummaryCards(filteredData);
+            renderCharts(filteredData);
+        }
+
+        function getFilteredTransactions() {
+            const searchKeyword = document.getElementById('search-input').value.toLowerCase();
             const filterType = document.getElementById('filter-type').value;
             const startDate = document.getElementById('filter-start').value;
             const endDate = document.getElementById('filter-end').value;
 
-            let filtered = transactions.filter(item => {
-                const matchSearch = item.desc ? item.desc.toLowerCase().includes(searchValue) : false;
-                const matchType = (filterType === 'all') || (item.type === filterType);
-                const matchDate = (!startDate || item.date >= startDate) && (!endDate || item.date <= endDate);
-                return matchSearch && matchType && matchDate;
-            });
+            return transactions.filter(item => {
+                const matchKeyword = item.desc.toLowerCase().includes(searchKeyword);
+                const matchType = filterType === 'all' || item.type === filterType;
+                
+                let matchDate = true;
+                if (startDate && item.date < startDate) matchDate = false;
+                if (endDate && item.date > endDate) matchDate = false;
 
-            filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+                return matchKeyword && matchType && matchDate;
+            }).sort((a, b) => new Date(b.date) - new Date(a.date));
+        }
 
+        function updateSummaryCards(data) {
             let totalIncome = 0;
             let totalExpense = 0;
 
-            filtered.forEach(item => {
+            data.forEach(item => {
+                if (item.type === 'income') totalIncome += Number(item.amount);
+                else if (item.type === 'expense') totalExpense += Number(item.amount);
+            });
+
+            const totalBalance = totalIncome - totalExpense;
+
+            document.getElementById('card-total-saldo').innerText = formatCurrency(totalBalance);
+            document.getElementById('card-total-pemasukan').innerText = formatCurrency(totalIncome);
+            document.getElementById('card-total-pengeluaran').innerText = formatCurrency(totalExpense);
+            document.getElementById('card-total-count').innerText = data.length;
+        }
+
+        function renderTable(data) {
+            const tbody = document.getElementById('tx-table-body');
+            tbody.innerHTML = '';
+
+            if (data.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="text-center py-8 text-slate-500 text-sm">
+                            <i class="fa-solid fa-folder-open text-3xl mb-2 block"></i>
+                            Tidak ada catatan transaksi ditemukan.
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            data.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.className = "border-b border-slate-800/60 hover:bg-slate-800/30 transition text-sm";
+
+                const isIncome = item.type === 'income';
+                const badgeType = isIncome 
+                    ? `<span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-950/80 text-emerald-400 border border-emerald-800/50"><i class="fa-solid fa-arrow-down mr-1"></i>Pemasukan</span>`
+                    : `<span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-rose-950/80 text-rose-400 border border-rose-800/50"><i class="fa-solid fa-arrow-up mr-1"></i>Pengeluaran</span>`;
+
+                const amountClass = isIncome ? 'text-emerald-400 font-bold' : 'text-rose-400 font-bold';
+                const amountPrefix = isIncome ? '+ ' : '- ';
+
+                let actionsHtml = `<span class="text-xs text-slate-600">Akses Terbatas</span>`;
+                if (currentUser.role === 'admin') {
+                    actionsHtml = `
+                        <button onclick="editTx('${item.id}')" class="text-indigo-400 hover:text-indigo-300 p-1.5 transition" title="Edit">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </button>
+                        <button onclick="deleteTx('${item.id}')" class="text-rose-400 hover:text-rose-300 p-1.5 transition" title="Hapus">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    `;
+                }
+
+                tr.innerHTML = `
+                    <td class="py-3.5 px-6 whitespace-nowrap text-slate-300 font-medium">${formatDate(item.date)}</td>
+                    <td class="py-3.5 px-6 text-slate-200 font-semibold">${escapeHtml(item.desc)}</td>
+                    <td class="py-3.5 px-6">${badgeType}</td>
+                    <td class="py-3.5 px-6 text-right ${amountClass}">${amountPrefix}${formatCurrency(item.amount)}</td>
+                    <td class="py-3.5 px-6 text-center no-print">${actionsHtml}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // ==========================================
+        // 5. CRUD TRANSAKSI
+        // ==========================================
+        function openTxModal(id = null) {
+            document.getElementById('tx-form').reset();
+            document.getElementById('tx-id').value = '';
+            document.getElementById('tx-modal-title').innerText = 'Tambah Transaksi Baru';
+            document.getElementById('tx-date').value = new Date().toISOString().split('T')[0];
+
+            if (id) {
+                const item = transactions.find(t => t.id === id);
+                if (item) {
+                    document.getElementById('tx-id').value = item.id;
+                    document.getElementById('tx-date').value = item.date;
+                    document.getElementById('tx-desc').value = item.desc;
+                    document.getElementById('tx-amount').value = item.amount;
+                    document.querySelector(`input[name="tx-type"][value="${item.type}"]`).checked = true;
+                    document.getElementById('tx-modal-title').innerText = 'Edit Transaksi';
+                }
+            }
+
+            document.getElementById('tx-modal').classList.remove('hidden');
+        }
+
+        function closeTxModal() {
+            document.getElementById('tx-modal').classList.add('hidden');
+        }
+
+        function handleSaveTx(e) {
+            e.preventDefault();
+            const id = document.getElementById('tx-id').value;
+            const date = document.getElementById('tx-date').value;
+            const desc = document.getElementById('tx-desc').value.trim();
+            const amount = parseFloat(document.getElementById('tx-amount').value);
+            const type = document.querySelector('input[name="tx-type"]:checked').value;
+
+            if (!desc || isNaN(amount) || amount <= 0) {
+                alert('Mohon isi deskripsi dan jumlah nominal dengan benar!');
+                return;
+            }
+
+            if (id) {
+                const index = transactions.findIndex(t => t.id === id);
+                if (index !== -1) {
+                    transactions[index] = { id, date, desc, amount, type };
+                }
+            } else {
+                const newTx = {
+                    id: 'tx_' + Date.now(),
+                    date,
+                    desc,
+                    amount,
+                    type
+                };
+                transactions.push(newTx);
+            }
+
+            saveTransactions();
+            closeTxModal();
+            renderApp();
+        }
+
+        function editTx(id) {
+            openTxModal(id);
+        }
+
+        function deleteTx(id) {
+            if (confirm('Apakah Anda yakin ingin menghapus catatan transaksi ini?')) {
+                transactions = transactions.filter(t => t.id !== id);
+                saveTransactions();
+                renderApp();
+            }
+        }
+
+        function saveTransactions() {
+            localStorage.setItem('kas_transactions', JSON.stringify(transactions));
+        }
+
+        // ==========================================
+        // 6. CRUD DATA BANK (KHUSUS ADMIN)
+        // ==========================================
+        function openBankModal() {
+            if (currentUser.role !== 'admin') {
+                alert('Akses ditolak! Fitur ini khusus Administrator.');
+                return;
+            }
+            resetBankForm();
+            renderBankTable();
+            document.getElementById('bank-modal').classList.remove('hidden');
+        }
+
+        function closeBankModal() {
+            document.getElementById('bank-modal').classList.add('hidden');
+        }
+
+        function resetBankForm() {
+            document.getElementById('bank-form').reset();
+            document.getElementById('bank-id').value = '';
+        }
+
+        function handleSaveBank(e) {
+            e.preventDefault();
+            const id = document.getElementById('bank-id').value;
+            const name = document.getElementById('bank-name').value.trim();
+            const account = document.getElementById('bank-account').value.trim();
+            const holder = document.getElementById('bank-holder').value.trim();
+            const username = document.getElementById('bank-username').value.trim();
+            const password = document.getElementById('bank-password').value.trim();
+            const notes = document.getElementById('bank-notes').value.trim();
+
+            if (id) {
+                const index = bankAccounts.findIndex(b => b.id === id);
+                if (index !== -1) {
+                    bankAccounts[index] = { id, name, account, holder, username, password, notes };
+                }
+            } else {
+                bankAccounts.push({
+                    id: 'bank_' + Date.now(),
+                    name, account, holder, username, password, notes
+                });
+            }
+
+            localStorage.setItem('kas_banks', JSON.stringify(bankAccounts));
+            resetBankForm();
+            renderBankTable();
+        }
+
+        function renderBankTable() {
+            const tbody = document.getElementById('bank-table-body');
+            tbody.innerHTML = '';
+
+            if (bankAccounts.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="text-center py-4 text-slate-500">Belum ada data rekening bank tersimpan.</td></tr>`;
+                return;
+            }
+
+            bankAccounts.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-800/40 transition";
+                tr.innerHTML = `
+                    <td class="p-3 font-semibold text-amber-400">${escapeHtml(item.name)}</td>
+                    <td class="p-3 text-slate-200">${escapeHtml(item.account)}</td>
+                    <td class="p-3 text-slate-300">${escapeHtml(item.holder)}</td>
+                    <td class="p-3 text-slate-400">${escapeHtml(item.username || '-')}</td>
+                    <td class="p-3 text-slate-400">••••••••</td>
+                    <td class="p-3 text-slate-400">${escapeHtml(item.notes || '-')}</td>
+                    <td class="p-3 text-center">
+                        <button onclick="editBank('${item.id}')" class="text-indigo-400 hover:text-indigo-300 mr-2"><i class="fa-solid fa-pen"></i></button>
+                        <button onclick="deleteBank('${item.id}')" class="text-rose-400 hover:text-rose-300"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function editBank(id) {
+            const item = bankAccounts.find(b => b.id === id);
+            if (item) {
+                document.getElementById('bank-id').value = item.id;
+                document.getElementById('bank-name').value = item.name;
+                document.getElementById('bank-account').value = item.account;
+                document.getElementById('bank-holder').value = item.holder;
+                document.getElementById('bank-username').value = item.username || '';
+                document.getElementById('bank-password').value = item.password || '';
+                document.getElementById('bank-notes').value = item.notes || '';
+            }
+        }
+
+        function deleteBank(id) {
+            if (confirm('Hapus akses rekening ini?')) {
+                bankAccounts = bankAccounts.filter(b => b.id !== id);
+                localStorage.setItem('kas_banks', JSON.stringify(bankAccounts));
+                renderBankTable();
+            }
+        }
+
+        // ==========================================
+        // 7. GALERI FOTO & MANAJEMEN NOTA
+        // ==========================================
+        function openGalleryModal() {
+            renderGalleryGrid();
+            document.getElementById('gallery-modal').classList.remove('hidden');
+        }
+
+        function closeGalleryModal() {
+            document.getElementById('gallery-modal').classList.add('hidden');
+        }
+
+        function handleSavePhoto(e) {
+            e.preventDefault();
+            const titleInput = document.getElementById('photo-title');
+            const fileInput = document.getElementById('photo-file');
+
+            const file = fileInput.files[0];
+            if (!file) {
+                alert('Pilih gambar terlebih dahulu!');
+                return;
+            }
+
+            // Batasi ukuran file hingga ~2MB untuk keamanan LocalStorage
+            if (file.size > 2 * 1024 * 1024) {
+                alert('Ukuran gambar terlalu besar! Maksimal 2 MB.');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function (event) {
+                const newPhoto = {
+                    id: 'photo_' + Date.now(),
+                    title: titleInput.value.trim(),
+                    src: event.target.result,
+                    date: new Date().toLocaleDateString('id-ID')
+                };
+
+                photos.push(newPhoto);
+                try {
+                    localStorage.setItem('kas_photos', JSON.stringify(photos));
+                } catch (err) {
+                    alert('Memori penyimpanan lokal penuh! Hapus beberapa foto lama.');
+                    photos.pop();
+                    return;
+                }
+
+                titleInput.value = '';
+                fileInput.value = '';
+                renderGalleryGrid();
+            };
+
+            reader.readAsDataURL(file);
+        }
+
+        function renderGalleryGrid() {
+            const container = document.getElementById('gallery-container');
+            container.innerHTML = '';
+
+            if (photos.length === 0) {
+                container.innerHTML = `<div class="col-span-full text-center py-8 text-slate-500 text-xs"><i class="fa-regular fa-image text-3xl mb-2 block"></i>Belum ada foto/nota tersimpan.</div>`;
+                return;
+            }
+
+            photos.forEach(item => {
+                const card = document.createElement('div');
+                card.className = "bg-slate-800 border border-slate-700/80 rounded-xl overflow-hidden shadow-md flex flex-col group relative";
+
+                card.innerHTML = `
+                    <div class="h-36 overflow-hidden bg-slate-950 flex items-center justify-center cursor-pointer relative" onclick="openPhotoPreview('${item.src}', '${escapeHtml(item.title)}')">
+                        <img src="${item.src}" alt="${escapeHtml(item.title)}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                        <div class="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white text-xs font-semibold">
+                            <i class="fa-solid fa-magnifying-glass-plus mr-1"></i> Perbesar
+                        </div>
+                    </div>
+                    <div class="p-3 flex flex-col justify-between flex-grow">
+                        <h5 class="font-bold text-xs text-slate-200 line-clamp-1">${escapeHtml(item.title)}</h5>
+                        <div class="flex justify-between items-center mt-2 pt-2 border-t border-slate-700/50">
+                            <span class="text-[10px] text-slate-400">${item.date}</span>
+                            <button onclick="deletePhoto('${item.id}')" class="text-rose-400 hover:text-rose-300 text-xs p-1" title="Hapus Foto">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function deletePhoto(id) {
+            if (confirm('Hapus foto ini dari galeri?')) {
+                photos = photos.filter(p => p.id !== id);
+                localStorage.setItem('kas_photos', JSON.stringify(photos));
+                renderGalleryGrid();
+            }
+        }
+
+        function openPhotoPreview(src, title) {
+            document.getElementById('preview-img-target').src = src;
+            document.getElementById('preview-img-title').innerText = title;
+            document.getElementById('photo-preview-modal').classList.remove('hidden');
+        }
+
+        function closePhotoPreview() {
+            document.getElementById('photo-preview-modal').classList.add('hidden');
+        }
+
+        // ==========================================
+        // 8. CHART.JS INTEGRATION
+        // ==========================================
+        function renderCharts(data) {
+            renderTrendChart(data);
+            renderCategoryChart(data);
+        }
+
+        function renderTrendChart(data) {
+            const ctx = document.getElementById('trendChart').getContext('2d');
+            
+            const grouped = {};
+            data.forEach(item => {
+                if (!grouped[item.date]) {
+                    grouped[item.date] = { income: 0, expense: 0 };
+                }
+                if (item.type === 'income') grouped[item.date].income += Number(item.amount);
+                else grouped[item.date].expense += Number(item.amount);
+            });
+
+            const labels = Object.keys(grouped).sort();
+            const incomeData = labels.map(date => grouped[date].income);
+            const expenseData = labels.map(date => grouped[date].expense);
+
+            if (trendChartInstance) trendChartInstance.destroy();
+
+            trendChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels.map(d => formatDate(d)),
+                    datasets: [
+                        {
+                            label: 'Pemasukan',
+                            data: incomeData,
+                            borderColor: '#10b981',
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            fill: true,
+                            tension: 0.3
+                        },
+                        {
+                            label: 'Pengeluaran',
+                            data: expenseData,
+                            borderColor: '#f43f5e',
+                            backgroundColor: 'rgba(244, 63, 94, 0.1)',
+                            fill: true,
+                            tension: 0.3
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { labels: { color: '#94a3b8' } }
+                    },
+                    scales: {
+                        x: { ticks: { color: '#64748b' }, grid: { color: '#1e293b' } },
+                        y: { ticks: { color: '#64748b' }, grid: { color: '#1e293b' } }
+                    }
+                }
+            });
+        }
+
+        function renderCategoryChart(data) {
+            const ctx = document.getElementById('categoryChart').getContext('2d');
+            
+            let totalIncome = 0;
+            let totalExpense = 0;
+
+            data.forEach(item => {
                 if (item.type === 'income') totalIncome += Number(item.amount);
                 else totalExpense += Number(item.amount);
             });
 
-            const totalSaldo = totalIncome - totalExpense;
+            if (categoryChartInstance) categoryChartInstance.destroy();
 
-            document.getElementById('card-total-saldo').textContent = formatRupiah(totalSaldo);
-            document.getElementById('card-total-pemasukan').textContent = formatRupiah(totalIncome);
-            document.getElementById('card-total-pengeluaran').textContent = formatRupiah(totalExpense);
-            document.getElementById('card-total-count').textContent = filtered.length;
-
-            const tbody = document.getElementById('tx-table-body');
-            tbody.innerHTML = '';
-
-            if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="py-8 text-center text-slate-500"><i class="fa-solid fa-folder-open text-xl mb-1 block"></i> Data kosong atau tidak ditemukan</td></tr>`;
-            } else {
-                filtered.forEach(item => {
-                    const badge = item.type === 'income' 
-                        ? `<span class="px-2.5 py-1 text-xs font-bold rounded-lg bg-emerald-950/60 text-emerald-400 border border-emerald-800/50"><i class="fa-solid fa-circle-arrow-up"></i> Masuk</span>`
-                        : `<span class="px-2.5 py-1 text-xs font-bold rounded-lg bg-rose-950/60 text-rose-400 border border-rose-800/50"><i class="fa-solid fa-circle-arrow-down"></i> Keluar</span>`;
-                    
-                    const amt = item.type === 'income'
-                        ? `<span class="text-emerald-400 font-bold">+ ${formatRupiah(item.amount)}</span>`
-                        : `<span class="text-rose-400 font-bold">- ${formatRupiah(item.amount)}</span>`;
-
-                    const actionBtn = currentUserRole === 'admin' 
-                        ? `<div class="flex justify-center gap-3 no-print">
-                            <button onclick="editTx('${item.id}')" class="text-indigo-400 hover:text-indigo-300 transition"><i class="fa-solid fa-pen-to-square"></i></button>
-                            <button onclick="deleteTx('${item.id}')" class="text-rose-400 hover:text-rose-300 transition"><i class="fa-solid fa-trash"></i></button>
-                           </div>`
-                        : `<span class="text-xs text-slate-500 no-print"><i class="fa-solid fa-lock"></i> Terkunci</span>`;
-
-                    tbody.innerHTML += `
-                        <tr class="border-b border-slate-800/60 hover:bg-slate-800/40 transition">
-                            <td class="py-4 px-6 text-sm font-medium text-slate-300">${item.date}</td>
-                            <td class="py-4 px-6 text-sm font-semibold text-slate-100">${item.desc}</td>
-                            <td class="py-4 px-6">${badge}</td>
-                            <td class="py-4 px-6 text-right font-mono">${amt}</td>
-                            <td class="py-4 px-6 text-center no-print">${actionBtn}</td>
-                        </tr>
-                    `;
-                });
-            }
-
-            renderCharts(filtered);
+            categoryChartInstance = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Pemasukan', 'Pengeluaran'],
+                    datasets: [{
+                        data: [totalIncome, totalExpense],
+                        backgroundColor: ['#10b981', '#f43f5e'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { color: '#94a3b8' } }
+                    }
+                }
+            });
         }
 
-        function setReportPreset(type) {
+        // ==========================================
+        // 9. FITUR CHAT TIM TELEGRAM STYLE
+        // ==========================================
+        function toggleChat() {
+            const windowEl = document.getElementById('chat-window');
+            isChatOpen = !isChatOpen;
+            if (isChatOpen) {
+                windowEl.classList.remove('hidden');
+                windowEl.classList.add('flex');
+                document.getElementById('chat-badge').classList.add('hidden');
+                document.getElementById('chat-badge').innerText = '0';
+                scrollToBottomChat();
+            } else {
+                windowEl.classList.add('hidden');
+                windowEl.classList.remove('flex');
+            }
+        }
+
+        function sendChatMessage(e) {
+            e.preventDefault();
+            const inputEl = document.getElementById('chat-input');
+            const text = inputEl.value.trim();
+
+            if (!text) return;
+
+            const newMsg = {
+                id: 'msg_' + Date.now(),
+                sender: currentUser.name,
+                role: currentUser.role,
+                text: text,
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            };
+
+            chatMessages.push(newMsg);
+            localStorage.setItem('kas_chats', JSON.stringify(chatMessages));
+            inputEl.value = '';
+            renderChatMessages();
+            scrollToBottomChat();
+        }
+
+        function renderChatMessages() {
+            const container = document.getElementById('chat-messages-container');
+            container.innerHTML = '';
+
+            if (chatMessages.length === 0) {
+                container.innerHTML = `<div class="text-center text-slate-500 text-xs my-auto py-8">Belum ada percakapan. Mulai kirim pesan!</div>`;
+                return;
+            }
+
+            chatMessages.forEach(msg => {
+                const isMe = currentUser && msg.sender === currentUser.name;
+                const wrapper = document.createElement('div');
+                wrapper.className = `flex flex-col ${isMe ? 'items-end' : 'items-start'} my-1`;
+
+                const bgClass = isMe ? 'bg-[#2b5278] text-white rounded-br-none' : 'bg-[#182533] text-slate-100 rounded-bl-none';
+                const roleBadge = msg.role === 'admin' ? '<span class="text-[9px] bg-amber-500/20 text-amber-300 px-1 rounded ml-1">Admin</span>' : '';
+
+                wrapper.innerHTML = `
+                    <div class="max-w-[80%] ${bgClass} p-2.5 rounded-2xl shadow-sm text-xs relative">
+                        <div class="font-bold text-[11px] text-[#64b5ef] mb-0.5 flex items-center">
+                            ${escapeHtml(msg.sender)} ${roleBadge}
+                        </div>
+                        <p class="leading-relaxed break-words">${escapeHtml(msg.text)}</p>
+                        <span class="text-[9px] text-slate-400 block text-right mt-1">${msg.time}</span>
+                    </div>
+                `;
+                container.appendChild(wrapper);
+            });
+        }
+
+        function clearAllChatMessages() {
+            if (currentUser.role !== 'admin') return;
+            if (confirm('Bersihkan semua riwayat obrolan?')) {
+                chatMessages = [];
+                localStorage.setItem('kas_chats', JSON.stringify(chatMessages));
+                renderChatMessages();
+            }
+        }
+
+        function scrollToBottomChat() {
+            const container = document.getElementById('chat-messages-container');
+            container.scrollTop = container.scrollHeight;
+        }
+
+        // ==========================================
+        // 10. FILTER PRESET, IMPORT & EXPORT
+        // ==========================================
+        function setReportPreset(preset) {
             const today = new Date();
-            const offset = today.getTimezoneOffset() * 60000;
-            const todayStr = new Date(today - offset).toISOString().split('T')[0];
-            
-            if (type === 'today') {
-                document.getElementById('filter-start').value = todayStr;
-                document.getElementById('filter-end').value = todayStr;
-            } else if (type === 'this_month') {
-                const startMonth = new Date(today.getFullYear(), today.getMonth(), 2).toISOString().split('T')[0];
-                document.getElementById('filter-start').value = startMonth;
-                document.getElementById('filter-end').value = todayStr;
-            } else if (type === 'this_year') {
-                const startYear = today.getFullYear() + "-01-01";
-                document.getElementById('filter-start').value = startYear;
-                document.getElementById('filter-end').value = todayStr;
+            const filterStart = document.getElementById('filter-start');
+            const filterEnd = document.getElementById('filter-end');
+
+            if (preset === 'today') {
+                const str = today.toISOString().split('T')[0];
+                filterStart.value = str;
+                filterEnd.value = str;
+            } else if (preset === 'this_month') {
+                const firstDay = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().split('T')[0];
+                const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0).toISOString().split('T')[0];
+                filterStart.value = firstDay;
+                filterEnd.value = lastDay;
+            } else if (preset === 'this_year') {
+                const firstDay = `${today.getFullYear()}-01-01`;
+                const lastDay = `${today.getFullYear()}-12-31`;
+                filterStart.value = firstDay;
+                filterEnd.value = lastDay;
             }
             renderApp();
         }
@@ -701,250 +1251,18 @@
             renderApp();
         }
 
-        function renderCharts(data) {
-            if (trendChartInstance) trendChartInstance.destroy();
-            if (categoryChartInstance) categoryChartInstance.destroy();
-
-            const monthlyData = {};
-            data.forEach(item => {
-                if(!item.date) return;
-                const month = item.date.substring(0, 7);
-                if (!monthlyData[month]) monthlyData[month] = { income: 0, expense: 0 };
-                if (item.type === 'income') monthlyData[month].income += Number(item.amount);
-                else monthlyData[month].expense += Number(item.amount);
-            });
-
-            const sortedMonths = Object.keys(monthlyData).sort();
-            const incomes = sortedMonths.map(m => monthlyData[m].income);
-            const expenses = sortedMonths.map(m => monthlyData[m].expense);
-
-            const ctxTrend = document.getElementById('trendChart').getContext('2d');
-            trendChartInstance = new Chart(ctxTrend, {
-                type: 'line',
-                data: {
-                    labels: sortedMonths,
-                    datasets: [
-                        { label: 'Pemasukan', data: incomes, borderColor: '#34d399', backgroundColor: 'rgba(52, 211, 153, 0.1)', tension: 0.3, fill: true },
-                        { label: 'Pengeluaran', data: expenses, borderColor: '#fb7185', backgroundColor: 'rgba(251, 113, 133, 0.1)', tension: 0.3, fill: true }
-                    ]
-                },
-                options: { responsive: true, maintainAspectRatio: false }
-            });
-
-            let totalIncome = 0;
-            let totalExpense = 0;
-            data.forEach(item => {
-                if (item.type === 'income') totalIncome += Number(item.amount);
-                else totalExpense += Number(item.amount);
-            });
-
-            const ctxCategory = document.getElementById('categoryChart').getContext('2d');
-            categoryChartInstance = new Chart(ctxCategory, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Pemasukan', 'Pengeluaran'],
-                    datasets: [{
-                        data: [totalIncome, totalExpense],
-                        backgroundColor: ['#34d399', '#fb7185']
-                    }]
-                },
-                options: { responsive: true, maintainAspectRatio: false }
-            });
-        }
-
-        function openTxModal() {
-            document.getElementById('tx-modal').classList.remove('hidden');
-            document.getElementById('tx-modal-title').textContent = "Tambah Transaksi";
-            document.getElementById('tx-id').value = '';
-            document.getElementById('tx-date').value = new Date().toISOString().split('T')[0];
-            document.getElementById('tx-desc').value = '';
-            document.getElementById('tx-amount').value = '';
-            isEditing = false;
-        }
-
-        function closeTxModal() {
-            document.getElementById('tx-modal').classList.add('hidden');
-        }
-
-        function handleSaveTx(e) {
-            e.preventDefault();
-            const id = document.getElementById('tx-id').value;
-            const date = document.getElementById('tx-date').value;
-            const desc = document.getElementById('tx-desc').value;
-            const type = document.querySelector('input[name="tx-type"]:checked').value;
-            const amount = Number(document.getElementById('tx-amount').value);
-
-            const newTx = { date, desc, type, amount };
-
-            if (isEditing && id) {
-                db.ref('transactions/' + id).update(newTx);
-            } else {
-                db.ref('transactions').push(newTx);
-            }
-
-            closeTxModal();
-        }
-
-        function editTx(id) {
-            const target = transactions.find(item => item.id === id);
-            if (!target) return;
-
-            document.getElementById('tx-modal').classList.remove('hidden');
-            document.getElementById('tx-modal-title').textContent = "Edit Transaksi";
-            document.getElementById('tx-id').value = target.id;
-            document.getElementById('tx-date').value = target.date;
-            document.getElementById('tx-desc').value = target.desc;
-            document.querySelector(`input[name="tx-type"][value="${target.type}"]`).checked = true;
-            document.getElementById('tx-amount').value = target.amount;
-            isEditing = true;
-        }
-
-        function deleteTx(id) {
-            if (confirm("Apakah Anda yakin ingin menghapus transaksi ini?")) {
-                db.ref('transactions/' + id).remove();
-            }
-        }
-
-        function openBankModal() {
-            if (currentUserRole !== 'admin') {
-                alert("Fitur ini hanya dapat diakses oleh Administrator!");
-                return;
-            }
-            document.getElementById('bank-modal').classList.remove('hidden');
-            resetBankForm();
-            renderBankTable();
-        }
-
-        function closeBankModal() {
-            document.getElementById('bank-modal').classList.add('hidden');
-        }
-
-        function resetBankForm() {
-            document.getElementById('bank-id').value = '';
-            document.getElementById('bank-name').value = '';
-            document.getElementById('bank-account').value = '';
-            document.getElementById('bank-holder').value = '';
-            document.getElementById('bank-user').value = '';
-            document.getElementById('bank-pass').value = '';
-            isEditingBank = false;
-        }
-
-        function renderBankTable() {
-            const tbody = document.getElementById('bank-table-body');
-            tbody.innerHTML = '';
-
-            if (bankAccounts.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" class="py-4 text-center text-slate-500">Belum ada data login bank tersimpan.</td></tr>`;
-                return;
-            }
-
-            bankAccounts.forEach(item => {
-                tbody.innerHTML += `
-                    <tr class="border-b border-slate-800 hover:bg-slate-800/40 transition">
-                        <td class="py-2.5 px-3 font-semibold text-slate-200">${item.name}</td>
-                        <td class="py-2.5 px-3 font-mono text-slate-300">${item.account}</td>
-                        <td class="py-2.5 px-3 text-slate-300">${item.holder}</td>
-                        <td class="py-2.5 px-3 font-mono bg-slate-950 text-slate-300">${item.user}</td>
-                        <td class="py-2.5 px-3 font-mono text-slate-300">
-                            <span id="pass-text-${item.id}" class="tracking-widest">••••••••</span>
-                            <button onclick="toggleShowBankPass('${item.id}', '${item.pass}')" class="ml-2 text-indigo-400 hover:underline text-[10px]">
-                                <i class="fa-solid fa-eye" id="pass-icon-${item.id}"></i>
-                            </button>
-                        </td>
-                        <td class="py-2.5 px-3 text-center">
-                            <button onclick="editBank('${item.id}')" class="text-amber-400 hover:text-amber-300 transition mr-2"><i class="fa-solid fa-pen-to-square"></i></button>
-                            <button onclick="deleteBank('${item.id}')" class="text-rose-400 hover:text-rose-300 transition"><i class="fa-solid fa-trash"></i></button>
-                        </td>
-                    </tr>
-                `;
-            });
-        }
-
-        function toggleShowBankPass(id, pass) {
-            const el = document.getElementById(`pass-text-${id}`);
-            const icon = document.getElementById(`pass-icon-${id}`);
-            if (el.textContent === '••••••••') {
-                el.textContent = pass;
-                el.classList.remove('tracking-widest');
-                icon.classList.remove('fa-eye');
-                icon.classList.add('fa-eye-slash');
-            } else {
-                el.textContent = '••••••••';
-                el.classList.add('tracking-widest');
-                icon.classList.remove('fa-eye-slash');
-                icon.classList.add('fa-eye');
-            }
-        }
-
-        function handleSaveBank(e) {
-            e.preventDefault();
-            const id = document.getElementById('bank-id').value;
-            const name = document.getElementById('bank-name').value;
-            const account = document.getElementById('bank-account').value;
-            const holder = document.getElementById('bank-holder').value;
-            const user = document.getElementById('bank-user').value;
-            const pass = document.getElementById('bank-pass').value;
-
-            const bankObj = { name, account, holder, user, pass };
-
-            if (isEditingBank && id) {
-                db.ref('bankAccounts/' + id).update(bankObj);
-            } else {
-                db.ref('bankAccounts').push(bankObj);
-            }
-
-            resetBankForm();
-            alert("Data Rekening Bank berhasil disimpan!");
-        }
-
-        function editBank(id) {
-            const target = bankAccounts.find(b => b.id === id);
-            if (!target) return;
-
-            document.getElementById('bank-id').value = target.id;
-            document.getElementById('bank-name').value = target.name;
-            document.getElementById('bank-account').value = target.account;
-            document.getElementById('bank-holder').value = target.holder;
-            document.getElementById('bank-user').value = target.user;
-            document.getElementById('bank-pass').value = target.pass;
-            isEditingBank = true;
-        }
-
-        function deleteBank(id) {
-            if (confirm("Apakah Anda yakin ingin menghapus data akun bank ini?")) {
-                db.ref('bankAccounts/' + id).remove();
-            }
-        }
-
-        function openPasswordModal() {
-            document.getElementById('password-modal').classList.remove('hidden');
-        }
-
-        function closePasswordModal() {
-            document.getElementById('password-modal').classList.add('hidden');
-        }
-
-        function handleChangePassword(e) {
-            e.preventDefault();
-            const target = document.getElementById('pw-user-target').value;
-            const newPw = document.getElementById('new-password').value;
-
-            if (newPw.length < 4) {
-                alert("Password minimal 4 karakter!");
-                return;
-            }
-
-            localStorage.setItem(`kas_pw_${target}`, newPw);
-            alert(`Sandi untuk ${target} berhasil diperbarui!`);
-            document.getElementById('new-password').value = '';
-            closePasswordModal();
-        }
-
         function exportToExcel() {
-            const worksheet = XLSX.utils.json_to_sheet(transactions);
+            const dataToExport = getFilteredTransactions().map(item => ({
+                Tanggal: item.date,
+                Deskripsi: item.desc,
+                Jenis: item.type === 'income' ? 'Pemasukan' : 'Pengeluaran',
+                'Jumlah (Rp)': item.amount
+            }));
+
+            const worksheet = XLSX.utils.json_to_sheet(dataToExport);
             const workbook = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(workbook, worksheet, "Catatan Kas");
-            XLSX.writeFile(workbook, "Kas_PRO_v2_Export.xlsx");
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Laporan Kas");
+            XLSX.writeFile(workbook, `Laporan_Kas_${new Date().toISOString().split('T')[0]}.xlsx`);
         }
 
         function exportToPDF() {
@@ -952,15 +1270,22 @@
         }
 
         function backupDatabase() {
-            const backupObj = {
-                transactions: transactions,
-                bankAccounts: bankAccounts
+            const backupData = {
+                transactions,
+                bankAccounts,
+                chatMessages,
+                photos,
+                userPasswords,
+                exportedAt: new Date().toISOString()
             };
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backupObj));
-            const dlAnchorElem = document.createElement('a');
-            dlAnchorElem.setAttribute("href", dataStr);
-            dlAnchorElem.setAttribute("download", "kas_pro_v2_full_backup.json");
-            dlAnchorElem.click();
+
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backupData, null, 2));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", `Backup_KasPro_${new Date().toISOString().split('T')[0]}.json`);
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
         }
 
         function importFromExcel(e) {
@@ -968,141 +1293,58 @@
             if (!file) return;
 
             const reader = new FileReader();
-            reader.onload = function(evt) {
-                const data = new Uint8Array(evt.target.result);
-                const workbook = XLSX.read(data, {type: 'array'});
-                const sheetName = workbook.SheetNames[0];
-                const sheet = workbook.Sheets[sheetName];
-                const excelData = XLSX.utils.sheet_to_json(sheet);
+            reader.onload = (evt) => {
+                try {
+                    const bstr = evt.target.result;
+                    const workbook = XLSX.read(bstr, { type: 'binary' });
+                    const sheetName = workbook.SheetNames[0];
+                    const worksheet = workbook.Sheets[sheetName];
+                    const json = XLSX.utils.sheet_to_json(worksheet);
 
-                if (excelData.length > 0 && excelData[0].hasOwnProperty('desc') && excelData[0].hasOwnProperty('amount')) {
-                    excelData.forEach((item) => {
-                        const newTx = {
-                            date: item.date || new Date().toISOString().split('T')[0],
-                            desc: item.desc,
-                            type: item.type === 'expense' ? 'expense' : 'income',
-                            amount: Number(item.amount)
-                        };
-                        db.ref('transactions').push(newTx);
+                    let importedCount = 0;
+                    json.forEach(row => {
+                        if (row.Tanggal && row.Deskripsi && row['Jumlah (Rp)']) {
+                            transactions.push({
+                                id: 'tx_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
+                                date: row.Tanggal,
+                                desc: row.Deskripsi,
+                                type: (row.Jenis && row.Jenis.toLowerCase().includes('pengeluaran')) ? 'expense' : 'income',
+                                amount: parseFloat(row['Jumlah (Rp)']) || 0
+                            });
+                            importedCount++;
+                        }
                     });
-                    alert("Data Excel berhasil di-import ke Firebase!");
-                } else {
-                    alert("Format data Excel tidak sesuai standard.");
+
+                    saveTransactions();
+                    renderApp();
+                    alert(`Berhasil mengimpor ${importedCount} data transaksi!`);
+                } catch (err) {
+                    alert('Gagal mengimpor file. Pastikan format file sesuai!');
                 }
             };
-            reader.readAsBuffer(file);
+            reader.readAsBinaryString(file);
         }
+
+        // Modal password controller
+        function openPasswordModal() { document.getElementById('password-modal').classList.remove('hidden'); }
+        function closePasswordModal() { document.getElementById('password-modal').classList.add('hidden'); }
 
         // ==========================================
-        // FITUR CHATINGAN TELEGRAM WEB STYLE (FIREBASE)
+        // 11. HELPER UTILS
         // ==========================================
-        function toggleChat() {
-            const chatToggleBtn = document.getElementById('chat-toggle-btn');
-            const chatWindow = document.getElementById('chat-window');
-            
-            if (chatWindow.classList.contains('hidden')) {
-                chatWindow.classList.remove('hidden');
-                chatWindow.classList.add('flex');
-                chatToggleBtn.classList.add('hidden');
-                
-                const container = document.getElementById('chat-messages-container');
-                container.scrollTop = container.scrollHeight;
-            } else {
-                chatWindow.classList.remove('flex');
-                chatWindow.classList.add('hidden');
-                chatToggleBtn.classList.remove('hidden');
-            }
+        function formatCurrency(val) {
+            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(val);
         }
 
-        function loadChatMessages() {
-            const container = document.getElementById('chat-messages-container');
-            container.innerHTML = '';
-
-            if (chatMessages.length === 0) {
-                container.innerHTML = `
-                    <div class="text-center py-8 text-slate-500">
-                        <div class="inline-block bg-[#182533] border border-[#2B5278] text-[#2AABEE] text-xs font-medium px-3 py-1.5 rounded-lg shadow-sm">
-                            <i class="fa-solid fa-lock text-[10px]"></i> Pesan terenkripsi realtime via Telegram Web
-                        </div>
-                    </div>
-                `;
-                return;
-            }
-
-            chatMessages.forEach(msg => {
-                const isMe = msg.role === currentUserRole;
-                
-                // Styling Gelembung Pesan Khas Telegram Dark Theme
-                const bubbleBg = isMe ? 'bg-[#2b5278] text-slate-100 rounded-br-none' : 'bg-[#182533] text-slate-100 rounded-bl-none';
-                const alignment = isMe ? 'justify-end' : 'justify-start';
-                const senderName = msg.role === 'admin' ? 'Administrator' : 'Staff Operator';
-                const nameColor = msg.role === 'admin' ? 'text-[#2AABEE]' : 'text-indigo-400';
-
-                // Tombol Hapus Pesan Individu (Jika milik sendiri atau Admin)
-                const deleteBtn = (isMe || currentUserRole === 'admin') 
-                    ? `<button onclick="deleteChatMessage('${msg.id}')" title="Hapus pesan ini" class="opacity-0 group-hover:opacity-100 text-slate-400 hover:text-rose-400 transition ml-1.5 text-[10px]">
-                        <i class="fa-solid fa-trash"></i>
-                       </button>` 
-                    : '';
-
-                container.innerHTML += `
-                    <div class="flex ${alignment} group">
-                        <div class="max-w-[80%]">
-                            <div class="p-2.5 rounded-xl shadow-sm ${bubbleBg} relative border border-slate-700/30">
-                                <!-- Nama Pengirim untuk Pesan Orang Lain -->
-                                ${!isMe ? `<span class="block text-[11px] font-bold ${nameColor} mb-0.5">${senderName}</span>` : ''}
-                                
-                                <p class="break-words text-xs leading-relaxed font-normal">${msg.text}</p>
-                                
-                                <div class="flex items-center justify-end gap-1 mt-1 text-[9px] text-slate-400">
-                                    <span>${msg.time}</span>
-                                    ${isMe ? `<i class="fa-solid fa-check text-[#2AABEE] text-[10px]"></i>` : ''}
-                                    ${deleteBtn}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            });
-
-            container.scrollTop = container.scrollHeight;
+        function formatDate(dateStr) {
+            if (!dateStr) return '-';
+            const parts = dateStr.split('-');
+            if (parts.length !== 3) return dateStr;
+            return `${parts[2]}/${parts[1]}/${parts[0]}`;
         }
 
-        function sendChatMessage(e) {
-            e.preventDefault();
-            const input = document.getElementById('chat-input');
-            const text = input.value.trim();
-            if (!text) return;
-
-            const timeNow = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
-
-            const newMsg = {
-                role: currentUserRole,
-                text: text,
-                time: timeNow,
-                timestamp: Date.now()
-            };
-
-            db.ref('chat_messages').push(newMsg);
-            input.value = '';
-        }
-
-        // Fungsi Hapus Satu Pesan Chat
-        function deleteChatMessage(msgId) {
-            if (confirm("Apakah Anda yakin ingin menghapus pesan ini?")) {
-                db.ref('chat_messages/' + msgId).remove();
-            }
-        }
-
-        // Fungsi Hapus Semua Chat (Khusus Admin)
-        function clearAllChatMessages() {
-            if (currentUserRole !== 'admin') {
-                alert("Fitur ini hanya dapat diakses oleh Admin!");
-                return;
-            }
-            if (confirm("Apakah Anda yakin ingin menghapus seluruh pesan di grup chat ini?")) {
-                db.ref('chat_messages').remove();
-            }
+        function escapeHtml(str) {
+            return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
         }
     </script>
 </body>
